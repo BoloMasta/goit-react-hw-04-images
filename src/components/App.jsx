@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import api from '../services/api';
+import { fetchImages } from 'services/api';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
@@ -31,7 +31,7 @@ export class App extends Component {
 
     const fetchImagesByQuery = async query => {
       try {
-        const response = await api.fetchImages(query, 1);
+        const response = await fetchImages(query, 1);
         this.setState({ images: response });
       } catch (error) {
         this.setState({ error });
@@ -48,7 +48,7 @@ export class App extends Component {
     this.setState({ isLoading: true });
 
     try {
-      const response = await api.fetchImages('', 1);
+      const response = await fetchImages('', 1);
       this.setState({ images: response });
     } catch (error) {
       this.setState({ error });
