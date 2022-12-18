@@ -4,7 +4,7 @@ import api from '../services/api';
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
-// import { Modal } from './Modal/Modal';
+import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
 
 export class App extends Component {
@@ -57,6 +57,10 @@ export class App extends Component {
     }
   }
 
+  onImageClick = event => {
+    <Modal />;
+  };
+
   render() {
     const { images, isLoading, error } = this.state;
 
@@ -73,7 +77,7 @@ export class App extends Component {
         {error && <p>Whoops, something went wrong: {error.message}</p>}
         {isLoading && <Loader />}
 
-        <ImageGallery images={images} />
+        <ImageGallery images={images} onImageClick={this.onImageClick} />
         <Button label={'Load more'} />
       </div>
     );
