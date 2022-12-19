@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { fetchImages } from 'services/api';
 
 import { Searchbar } from './Searchbar/Searchbar';
+import { Section } from './Section/Section';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
 import { Modal } from './Modal/Modal';
@@ -22,6 +23,11 @@ export class App extends Component {
 
     const form = event.target;
     const query = form.elements.query.value;
+
+    // if (query === '') {
+    //   alert('Please enter your query');
+    //   return;
+    // }
 
     this.setState({
       query: query,
@@ -44,21 +50,43 @@ export class App extends Component {
   };
 
   // default first fetch of images
-  async componentDidMount() {
-    this.setState({ isLoading: true });
+  // async componentDidMount() {
+  //   this.setState({ isLoading: true });
 
-    try {
-      const response = await fetchImages('', 1);
-      this.setState({ images: response });
-    } catch (error) {
-      this.setState({ error });
-    } finally {
-      this.setState({ isLoading: false });
-    }
-  }
+  //   try {
+  //     const response = await fetchImages('', 1);
+  //     this.setState({ images: response });
+  //   } catch (error) {
+  //     this.setState({ error });
+  //   } finally {
+  //     this.setState({ isLoading: false });
+  //   }
+  // }
 
   onImageClick = event => {
     <Modal />;
+  };
+
+  handleLoadMore = () => {
+    const { query, page } = this.state;
+
+    this.setState({ isLoading: true });
+
+    const fetchImagesByQuery = async query => {
+      try {
+        const response = await fetchImages(query, page + 1);
+        this.setState(prevState => ({
+          images: [...prevState.images, ...response],
+          page: prevState.page + 1,
+        }));
+      } catch (error) {
+        this.setState({ error });
+      } finally {
+        this.setState({ isLoading: false });
+      }
+    };
+
+    fetchImagesByQuery(query, page + 1);
   };
 
   render() {
@@ -74,11 +102,19 @@ export class App extends Component {
         }}
       >
         <Searchbar onSubmit={this.onSubmit} />
+
         {error && <p>Whoops, something went wrong: {error.message}</p>}
         {isLoading && <Loader />}
 
-        <ImageGallery images={images} onImageClick={this.onImageClick} />
-        <Button label={'Load more'} />
+        <Section>
+          <ImageGallery images={images} onImageClick={this.onImageClick} />
+        </Section>
+
+        {images.length > 0 && !isLoading ? (
+          <Button label={'Load more'} handleLoadMore={this.handleLoadMore} />
+        ) : (
+          <div style={{ height: 40 }}></div>
+        )}
       </div>
     );
   }
