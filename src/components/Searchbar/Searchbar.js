@@ -1,7 +1,7 @@
-import css from './Searchbar.module.css';
-import PropTypes from 'prop-types';
 import { Component } from 'react';
 import { ButtonClear } from 'components/ButtonClear/ButtonClear';
+import css from './Searchbar.module.css';
+import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
   constructor(props) {
@@ -15,7 +15,7 @@ export class Searchbar extends Component {
     this.setState({ query: e.currentTarget.value.toLowerCase() });
   };
 
-  onClick = () => {
+  onClickClear = () => {
     this.setState({ query: '' });
   };
 
@@ -37,7 +37,9 @@ export class Searchbar extends Component {
             onChange={this.handleChange}
             value={this.state.query}
           />
-          {this.state.query ? <ButtonClear onClick={this.onClick} /> : null}
+          {this.state.query ? (
+            <ButtonClear onClickClear={this.onClickClear} />
+          ) : null}
         </form>
       </header>
     );

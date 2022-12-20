@@ -8,12 +8,12 @@ export class ButtonClear extends Component {
       <button
         type="button"
         className={css.ButtonClear}
-        onClick={this.props.onClick}
+        onClick={this.props.onClickClear}
       ></button>
     );
   }
 }
 
 ButtonClear.propTypes = {
-  onClick: PropTypes.func,
+  onClickClear: PropTypes.func,
 };

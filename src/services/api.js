@@ -14,7 +14,5 @@ export async function fetchImages(query, page) {
     },
   });
 
-  return response.data.hits;
+  return response.data;
 }
-
-// export default { fetchImages };
