@@ -4,13 +4,14 @@ import PropTypes from 'prop-types';
 
 export class ImageGalleryItem extends Component {
   render() {
+    const { webformatURL, largeImageURL, onImageClick } = this.props;
     return (
       <li className={css.imageGalleryItem}>
         <img
-          src={this.props.webformatURL}
+          src={webformatURL}
           alt=""
           className={css.imageGalleryItemImage}
-          onClick={() => this.props.onImageClick(this.props.largeImageURL)}
+          onClick={() => onImageClick(largeImageURL)}
         />
       </li>
     );

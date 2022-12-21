@@ -4,9 +4,14 @@ import { fetchImages } from 'services/api';
 import { Searchbar } from './Searchbar/Searchbar';
 import { Section } from './Section/Section';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import { Button } from './Button/Button';
+import { ButtonLoadMore } from './ButtonLoadMore/ButtonLoadMore';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
+
+const alertStyle = {
+  textAlign: 'center',
+  fontSize: 24,
+};
 
 export class App extends Component {
   state = {
@@ -18,14 +23,13 @@ export class App extends Component {
     error: null,
     showModal: false,
     largeImageURL: '',
+    noResulst: false,
   };
 
   // fetch images after submit
   handleSubmit = event => {
     event.preventDefault();
-
-    const form = event.target;
-    const query = form.elements.query.value;
+    const query = event.target.elements.query.value;
 
     if (query === '') {
       alert('Please enter your query');
@@ -36,44 +40,31 @@ export class App extends Component {
       query: query,
       page: 1,
       isLoading: true,
+      noResulst: false,
     });
 
     const fetchImagesByQuery = async query => {
       try {
         const response = await fetchImages(query, 1);
-        this.setState(
-          {
-            images: response.hits,
-            lastPage: Math.ceil(response.totalHits / 12),
-          },
-          () => {
-            console.log(this.state);
-          }
-        );
+        this.setState({
+          images: response.hits,
+          lastPage: Math.ceil(response.totalHits / 12),
+        });
+        if (response.totalHits === 0) {
+          this.setState({ noResulst: true });
+        }
       } catch (error) {
         this.setState({ error });
       } finally {
         this.setState({ isLoading: false });
       }
     };
-
     fetchImagesByQuery(query, 1);
   };
 
-  // modal open
-  onImageClick = largeImageURL => {
-    this.setState({ showModal: true, largeImageURL: largeImageURL });
-  };
-
-  // modal close
-  onClose = () => {
-    this.setState({ showModal: false, largeImageURL: '' });
-  };
-
-  // load more images
+  // fetch more images after click on button "Load more"
   handleLoadMore = () => {
     this.setState({ isLoading: true });
-
     const { query, page } = this.state;
     const fetchImagesByQuery = async query => {
       try {
@@ -88,8 +79,17 @@ export class App extends Component {
         this.setState({ isLoading: false });
       }
     };
-
     fetchImagesByQuery(query, page + 1);
+  };
+
+  // modal open
+  onImageClick = largeImageURL => {
+    this.setState({ showModal: true, largeImageURL: largeImageURL });
+  };
+
+  // modal close
+  onClose = () => {
+    this.setState({ showModal: false, largeImageURL: '' });
   };
 
   render() {
@@ -101,6 +101,7 @@ export class App extends Component {
       error,
       showModal,
       largeImageURL,
+      noResulst,
     } = this.state;
 
     return (
@@ -115,14 +116,26 @@ export class App extends Component {
         <Searchbar onSubmit={this.handleSubmit} />
 
         {isLoading && <Loader />}
-        {error && <p>Whoops, something went wrong: {error.message}</p>}
+
+        {error && (
+          <p style={alertStyle}>
+            Whoops, something went wrong: {error.message}
+          </p>
+        )}
+
+        {noResulst && (
+          <p style={alertStyle}>No images found. Please try another query.</p>
+        )}
 
         <Section>
           <ImageGallery images={images} onImageClick={this.onImageClick} />
         </Section>
 
         {page < lastPage && !isLoading ? (
-          <Button label={'Load more'} handleLoadMore={this.handleLoadMore} />
+          <ButtonLoadMore
+            label={'Load more'}
+            handleLoadMore={this.handleLoadMore}
+          />
         ) : (
           <div style={{ height: 40 }}></div>
         )}

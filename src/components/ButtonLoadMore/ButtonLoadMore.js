@@ -1,8 +1,8 @@
 import { Component } from 'react';
-import css from './Button.module.css';
+import css from './ButtonLoadMore.module.css';
 import PropTypes from 'prop-types';
 
-export class Button extends Component {
+export class ButtonLoadMore extends Component {
   render() {
     const { label, handleLoadMore } = this.props;
     return (
@@ -17,7 +17,7 @@ export class Button extends Component {
   }
 }
 
-Button.propTypes = {
+ButtonLoadMore.propTypes = {
   label: PropTypes.string,
   handleLoadMore: PropTypes.func,
 };

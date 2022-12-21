@@ -30,12 +30,11 @@ export class Modal extends Component {
   };
 
   render() {
-    // const { largeImageURL } = this.props;
-
+    const { largeImageURL } = this.props;
     return (
       <div className={css.overlay} onClick={this.handleBackdropClick}>
         <div className={css.modal}>
-          <img src={this.props.largeImageURL} alt="" />
+          <img src={largeImageURL} alt="" />
         </div>
       </div>
     );

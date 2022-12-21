@@ -4,12 +4,9 @@ import css from './Searchbar.module.css';
 import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      query: '',
-    };
-  }
+  state = {
+    query: '',
+  };
 
   handleChange = e => {
     this.setState({ query: e.currentTarget.value.toLowerCase() });
