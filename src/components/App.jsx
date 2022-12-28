@@ -22,9 +22,10 @@ export class App extends Component {
     noResults: false,
   };
 
-  // fetch images after submit
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({ images: [] });
+
     const query = event.target.elements.query.value;
 
     if (query === '') {
@@ -58,7 +59,6 @@ export class App extends Component {
     fetchImagesByQuery(query, 1);
   };
 
-  // fetch more images after click on button "Load more"
   handleLoadMore = () => {
     this.setState({ isLoading: true });
     const { query, page } = this.state;
@@ -78,12 +78,10 @@ export class App extends Component {
     fetchImagesByQuery(query, page + 1);
   };
 
-  // modal open
   onImageClick = largeImageURL => {
     this.setState({ showModal: true, largeImageURL: largeImageURL });
   };
 
-  // modal close
   onClose = () => {
     this.setState({ showModal: false, largeImageURL: '' });
   };
@@ -110,25 +108,20 @@ export class App extends Component {
         }}
       >
         <Searchbar onSubmit={this.handleSubmit} />
-
         {isLoading && <Loader />}
-
         {error && (
           <p className="alertStyle">
             Whoops, something went wrong: {error.message}
           </p>
         )}
-
         {noResults && (
           <p className="alertStyle">
             No images found. Please try another query.
           </p>
         )}
-
         <Section>
           <ImageGallery images={images} onImageClick={this.onImageClick} />
         </Section>
-
         {page < lastPage && !isLoading ? (
           <ButtonLoadMore
             label={'Load more'}
@@ -137,7 +130,6 @@ export class App extends Component {
         ) : (
           <div style={{ height: 40 }}></div>
         )}
-
         {showModal && (
           <Modal onClose={this.onClose} largeImageURL={largeImageURL} />
         )}
