@@ -101,7 +101,7 @@ export class App extends Component {
       error,
       showModal,
       largeImageURL,
-      noResulst,
+      noResults,
     } = this.state;
 
     return (
@@ -123,7 +123,7 @@ export class App extends Component {
           </p>
         )}
 
-        {noResulst && (
+        {noResults && (
           <p style={alertStyle}>No images found. Please try another query.</p>
         )}
 
