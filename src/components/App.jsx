@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import { fetchImages } from 'services/api';
+import '../index.css';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { Section } from './Section/Section';
@@ -7,11 +8,6 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { ButtonLoadMore } from './ButtonLoadMore/ButtonLoadMore';
 import { Modal } from './Modal/Modal';
 import { Loader } from './Loader/Loader';
-
-const alertStyle = {
-  textAlign: 'center',
-  fontSize: 24,
-};
 
 export class App extends Component {
   state = {
@@ -118,13 +114,15 @@ export class App extends Component {
         {isLoading && <Loader />}
 
         {error && (
-          <p style={alertStyle}>
+          <p className="alertStyle">
             Whoops, something went wrong: {error.message}
           </p>
         )}
 
         {noResults && (
-          <p style={alertStyle}>No images found. Please try another query.</p>
+          <p className="alertStyle">
+            No images found. Please try another query.
+          </p>
         )}
 
         <Section>

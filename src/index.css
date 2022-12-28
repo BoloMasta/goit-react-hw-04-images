@@ -48,3 +48,8 @@ img {
     color-stop(0.86, rgb(28, 58, 148))
   );
 }
+
+.alertStyle {
+  text-align: center;
+  font-size: 24px;
+}
