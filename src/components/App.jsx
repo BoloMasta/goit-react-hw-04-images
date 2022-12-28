@@ -23,7 +23,7 @@ export class App extends Component {
     error: null,
     showModal: false,
     largeImageURL: '',
-    noResulst: false,
+    noResults: false,
   };
 
   // fetch images after submit
@@ -40,7 +40,7 @@ export class App extends Component {
       query: query,
       page: 1,
       isLoading: true,
-      noResulst: false,
+      noResults: false,
     });
 
     const fetchImagesByQuery = async query => {
@@ -51,7 +51,7 @@ export class App extends Component {
           lastPage: Math.ceil(response.totalHits / 12),
         });
         if (response.totalHits === 0) {
-          this.setState({ noResulst: true });
+          this.setState({ noResults: true });
         }
       } catch (error) {
         this.setState({ error });
