@@ -22,6 +22,18 @@ export class App extends Component {
     noResults: false,
   };
 
+  handleChange = event => {
+    this.setState({ query: event.target.value }, () => {
+      console.log(this.state.query);
+    });
+  };
+
+  onClickClear = () => {
+    this.setState({ query: '' }, () => {
+      console.log(this.state.query);
+    });
+  };
+
   handleSubmit = event => {
     event.preventDefault();
     this.setState({ images: [] });
@@ -107,7 +119,12 @@ export class App extends Component {
           paddingBottom: 24,
         }}
       >
-        <Searchbar onSubmit={this.handleSubmit} />
+        <Searchbar
+          onSubmit={this.handleSubmit}
+          onChange={this.handleChange}
+          onClickClear={this.onClickClear}
+          query={this.state.query}
+        />
         {isLoading && <Loader />}
         {error && (
           <p className="alertStyle">

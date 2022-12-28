@@ -4,18 +4,6 @@ import css from './Searchbar.module.css';
 import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
-  state = {
-    query: '',
-  };
-
-  handleChange = e => {
-    this.setState({ query: e.currentTarget.value.toLowerCase() });
-  };
-
-  onClickClear = () => {
-    this.setState({ query: '' });
-  };
-
   render() {
     return (
       <header className={css.searchBar}>
@@ -23,7 +11,6 @@ export class Searchbar extends Component {
           <button type="submit" className={css.searchFormButton}>
             <span className={css.searchFormButtonLabel}>Search</span>
           </button>
-
           <input
             className={css.searchFormInput}
             type="text"
@@ -31,12 +18,12 @@ export class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            onChange={this.handleChange}
-            value={this.state.query}
+            onChange={this.props.onChange}
+            value={this.props.query}
           />
-          {this.state.query ? (
-            <ButtonClear onClickClear={this.onClickClear} />
-          ) : null}
+          {this.props.query && (
+            <ButtonClear onClickClear={this.props.onClickClear} />
+          )}
         </form>
       </header>
     );
@@ -45,4 +32,7 @@ export class Searchbar extends Component {
 
 Searchbar.propTypes = {
   onSubmit: PropTypes.func,
+  onChange: PropTypes.func,
+  onClickClear: PropTypes.func,
+  query: PropTypes.string,
 };
