@@ -5,9 +5,10 @@ import PropTypes from 'prop-types';
 
 export class Searchbar extends Component {
   render() {
+    const { onSubmit, onChange, onClickClear, query } = this.props;
     return (
       <header className={css.searchBar}>
-        <form className={css.searchForm} onSubmit={this.props.onSubmit}>
+        <form className={css.searchForm} onSubmit={onSubmit}>
           <button type="submit" className={css.searchFormButton}>
             <span className={css.searchFormButtonLabel}>Search</span>
           </button>
@@ -18,12 +19,10 @@ export class Searchbar extends Component {
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
-            onChange={this.props.onChange}
-            value={this.props.query}
+            onChange={onChange}
+            value={query}
           />
-          {this.props.query && (
-            <ButtonClear onClickClear={this.props.onClickClear} />
-          )}
+          {query && <ButtonClear onClickClear={onClickClear} />}
         </form>
       </header>
     );

@@ -23,71 +23,46 @@ export class App extends Component {
   };
 
   handleChange = event => {
-    this.setState({ query: event.target.value }, () => {
-      console.log(this.state.query);
-    });
+    this.setState({ query: event.target.value });
   };
 
   onClickClear = () => {
-    this.setState({ query: '' }, () => {
-      console.log(this.state.query);
-    });
+    this.setState({ query: '' });
+  };
+
+  fetchImagesByQuery = async searchQuery => {
+    this.setState({ isLoading: true, error: null, noResults: false });
+    try {
+      const response = await fetchImages(searchQuery, this.state.page);
+      this.setState(prevState => ({
+        images: [...prevState.images, ...response.hits],
+        lastPage: Math.ceil(response.totalHits / 12),
+      }));
+      if (response.totalHits === 0) {
+        this.setState({ noResults: true });
+      }
+    } catch (error) {
+      this.setState({ error });
+    } finally {
+      this.setState({ isLoading: false });
+    }
   };
 
   handleSubmit = event => {
     event.preventDefault();
-    this.setState({ images: [] });
-
-    const query = event.target.elements.query.value;
-
-    if (query === '') {
+    if (this.state.query === '') {
       alert('Please enter your query');
       return;
     }
-
-    this.setState({
-      query: query,
-      page: 1,
-      isLoading: true,
-      noResults: false,
+    this.setState({ images: [], page: 1 }, () => {
+      this.fetchImagesByQuery(this.state.query);
     });
-
-    const fetchImagesByQuery = async query => {
-      try {
-        const response = await fetchImages(query, 1);
-        this.setState({
-          images: response.hits,
-          lastPage: Math.ceil(response.totalHits / 12),
-        });
-        if (response.totalHits === 0) {
-          this.setState({ noResults: true });
-        }
-      } catch (error) {
-        this.setState({ error });
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    };
-    fetchImagesByQuery(query, 1);
   };
 
   handleLoadMore = () => {
-    this.setState({ isLoading: true });
-    const { query, page } = this.state;
-    const fetchImagesByQuery = async query => {
-      try {
-        const response = await fetchImages(query, page + 1);
-        this.setState(prevState => ({
-          images: [...prevState.images, ...response.hits],
-          page: prevState.page + 1,
-        }));
-      } catch (error) {
-        this.setState({ error });
-      } finally {
-        this.setState({ isLoading: false });
-      }
-    };
-    fetchImagesByQuery(query, page + 1);
+    this.setState({ page: this.state.page + 1 }, () => {
+      this.fetchImagesByQuery(this.state.query);
+    });
   };
 
   onImageClick = largeImageURL => {
@@ -125,21 +100,21 @@ export class App extends Component {
           onClickClear={this.onClickClear}
           query={this.state.query}
         />
-        {isLoading && <Loader />}
-        {error && (
-          <p className="alertStyle">
-            Whoops, something went wrong: {error.message}
-          </p>
-        )}
-        {noResults && (
-          <p className="alertStyle">
-            No images found. Please try another query.
-          </p>
-        )}
         <Section>
+          {isLoading && <Loader />}
+          {noResults && (
+            <p className="alertStyle">
+              No images found. Please try another query.
+            </p>
+          )}
           <ImageGallery images={images} onImageClick={this.onImageClick} />
+          {error && (
+            <p className="alertStyle">
+              Whoops, something went wrong: {error.message}
+            </p>
+          )}
         </Section>
-        {page < lastPage && !isLoading ? (
+        {page < lastPage && !isLoading && !error ? (
           <ButtonLoadMore
             label={'Load more'}
             handleLoadMore={this.handleLoadMore}
