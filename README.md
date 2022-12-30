@@ -2,4 +2,4 @@
 
 Image search from Pixabay using hooks.<br> 
 
-You can see it <a href="https://bolomasta.github.io/goit-react-hw-04-image-finder/">HERE</a>
+You can see it <a href="https://bolomasta.github.io/goit-react-hw-04-images/">HERE</a>
