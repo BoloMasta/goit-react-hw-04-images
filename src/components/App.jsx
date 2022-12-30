@@ -1,13 +1,13 @@
 import { Component } from 'react';
-import { fetchImages } from 'services/api';
+import fetchImages from 'services/api';
 import '../index.css';
 
-import { Searchbar } from './Searchbar/Searchbar';
-import { Section } from './Section/Section';
-import { ImageGallery } from './ImageGallery/ImageGallery';
-import { ButtonLoadMore } from './ButtonLoadMore/ButtonLoadMore';
+import Searchbar from './Searchbar/Searchbar';
+import Section from './Section/Section';
+import ImageGallery from './ImageGallery/ImageGallery';
+import ButtonLoadMore from './ButtonLoadMore/ButtonLoadMore';
 import { Modal } from './Modal/Modal';
-import { Loader } from './Loader/Loader';
+import Loader from './Loader/Loader';
 
 export class App extends Component {
   state = {
