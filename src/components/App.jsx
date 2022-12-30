@@ -6,7 +6,7 @@ import Searchbar from './Searchbar/Searchbar';
 import Section from './Section/Section';
 import ImageGallery from './ImageGallery/ImageGallery';
 import ButtonLoadMore from './ButtonLoadMore/ButtonLoadMore';
-import { Modal } from './Modal/Modal';
+import Modal from './Modal/Modal';
 import Loader from './Loader/Loader';
 
 export class App extends Component {
