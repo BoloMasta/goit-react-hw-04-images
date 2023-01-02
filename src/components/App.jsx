@@ -26,7 +26,6 @@ const App = () => {
   };
 
   const onClickClear = () => {
-    setQuery('');
     setInputValue('');
   };
 
