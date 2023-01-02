@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import fetchImages from 'services/api';
 import '../index.css';
 
@@ -58,8 +58,12 @@ const App = () => {
 
   const handleLoadMore = () => {
     setPage(prevState => prevState + 1);
-    fetchImagesByQuery(query);
   };
+
+  useEffect(() => {
+    if (page === 1) return;
+    fetchImagesByQuery(query);
+  }, [page]);
 
   const toggleModal = () => {
     setShowModal(prevState => !prevState);
