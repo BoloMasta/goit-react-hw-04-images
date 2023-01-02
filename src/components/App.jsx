@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import fetchImages from 'services/api';
 import '../index.css';
 
@@ -10,6 +10,7 @@ import Modal from './Modal/Modal';
 import Loader from './Loader/Loader';
 
 const App = () => {
+  const [inputValue, setInputValue] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [images, setImages] = useState([]);
@@ -21,47 +22,97 @@ const App = () => {
   const [noResults, setNoResults] = useState(false);
 
   const handleChange = event => {
-    setQuery(event.target.value);
+    // setQuery(event.target.value);
+    setInputValue(event.target.value);
   };
 
   const onClickClear = () => {
     setQuery('');
+    setInputValue('');
   };
 
-  const fetchImagesByQuery = async searchQuery => {
-    setIsLoading(true);
-    setError(null);
-    setNoResults(false);
+  const fetchImagesByQuery = useCallback(
+    async searchQuery => {
+      setIsLoading(true);
+      setError(null);
+      setNoResults(false);
 
-    try {
-      const response = await fetchImages(searchQuery, page);
-      setImages(prevState => [...prevState, ...response.hits]);
-      setLastPage(Math.ceil(response.totalHits / 12));
-      response.totalHits === 0 && setNoResults(true);
-    } catch (error) {
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      try {
+        const response = await fetchImages(searchQuery, page);
+        setImages(prevState => [...prevState, ...response.hits]);
+        setLastPage(Math.ceil(response.totalHits / 12));
+        response.totalHits === 0 && setNoResults(true);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [page]
+  );
+
+  // const fetchImagesByQuery = async searchQuery => {
+  //   setIsLoading(true);
+  //   setError(null);
+  //   setNoResults(false);
+
+  //   try {
+  //     const response = await fetchImages(searchQuery, page);
+  //     setImages(prevState => [...prevState, ...response.hits]);
+  //     setLastPage(Math.ceil(response.totalHits / 12));
+  //     response.totalHits === 0 && setNoResults(true);
+  //   } catch (error) {
+  //     setError(error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleSubmit = event => {
     event.preventDefault();
+
+    setQuery(inputValue);
+
     if (query === '') {
       alert('Please enter your query');
       return;
     }
     setImages([]);
     setPage(1);
+
     fetchImagesByQuery(query);
   };
 
-  const handleLoadMore = () => {
+  // const handleLoadMore = () => {
+  //   setPage(prevState => prevState + 1);
+  // };
+
+  // const handleLoadMore = useCallback(() => {
+  //   setPage(prevState => prevState + 1);
+  //   //fetchImagesByQuery(query);
+  // }, []);
+
+  const handleLoadMore = useCallback(() => {
     setPage(prevState => prevState + 1);
-  };
+    // fetchImagesByQuery(query);
+  }, []);
+
+  // useEffect(() => {
+  //   if (query !== inputValue) setImages([]);
+  //   setPage(1);
+  // }, [query, inputValue]);
+
+  // useEffect(() => {
+  //   setQuery(inputValue);
+  // }, [handleChange, inputValue]);
 
   useEffect(() => {
     if (page === 1) return;
+    if (page > 1 && query !== inputValue) {
+      setImages([]);
+      // setPage(1);
+    }
+
     fetchImagesByQuery(query);
   }, [page]);
 
@@ -87,7 +138,7 @@ const App = () => {
         onSubmit={handleSubmit}
         onChange={handleChange}
         onClickClear={onClickClear}
-        query={query}
+        inputValue={inputValue}
       />
       <Section>
         {error && <p className="alertStyle">Something went wrong: {error.message}</p>}

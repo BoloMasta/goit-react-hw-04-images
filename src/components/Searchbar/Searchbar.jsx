@@ -2,7 +2,7 @@ import css from './Searchbar.module.css';
 import PropTypes from 'prop-types';
 import ButtonClear from 'components/ButtonClear/ButtonClear';
 
-const Searchbar = ({ onSubmit, onChange, onClickClear, query }) => (
+const Searchbar = ({ onSubmit, onChange, onClickClear, inputValue }) => (
   <header className={css.searchBar}>
     <form className={css.searchForm} onSubmit={onSubmit}>
       <button type="submit" className={css.searchFormButton}>
@@ -16,9 +16,9 @@ const Searchbar = ({ onSubmit, onChange, onClickClear, query }) => (
         autoFocus
         placeholder="Search images and photos"
         onChange={onChange}
-        value={query}
+        value={inputValue}
       />
-      {query && <ButtonClear onClickClear={onClickClear} />}
+      {inputValue && <ButtonClear onClickClear={onClickClear} />}
     </form>
   </header>
 );
