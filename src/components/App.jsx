@@ -17,8 +17,10 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [lastPage, setLastPage] = useState(0);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false);
-  const [largeImageURL, setLargeImageURL] = useState('');
+  const [modal, setModal] = useState({
+    showModal: false,
+    largeImageURL: '',
+  });
   const [noResults, setNoResults] = useState(false);
 
   const handleChange = event => {
@@ -46,11 +48,11 @@ const App = () => {
   };
 
   const toggleModal = () => {
-    setShowModal(prevState => !prevState);
+    setModal(prevState => ({ ...prevState, showModal: !prevState.showModal }));
   };
 
   const handleImageClick = largeImageURL => {
-    setLargeImageURL(largeImageURL);
+    setModal(prevState => ({ ...prevState, largeImageURL }));
     toggleModal();
   };
 
@@ -96,7 +98,7 @@ const App = () => {
       ) : (
         <div style={{ height: 40 }}></div>
       )}
-      {showModal && <Modal onClose={toggleModal} largeImageURL={largeImageURL} />}
+      {modal.showModal && <Modal onClose={toggleModal} largeImageURL={modal.largeImageURL} />}
     </div>
   );
 };
